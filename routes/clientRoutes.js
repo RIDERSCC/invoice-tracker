@@ -8,7 +8,7 @@ const { createClientSchema, updateClientSchema } = require('../validators/client
 
 router.get('/', authenticate, clientController.getAllClients);
 router.post('/', authenticate, validate(createClientSchema), clientController.createClient);
-router.put('/:id', authenticate, validate(createClientSchema),clientController.updateClient);
+router.put('/:id', authenticate, validate(updateClientSchema),clientController.updateClient);
 router.delete('/:id', authenticate, requireAdmin, clientController.deleteClient);
 router.get('/:clientId/invoices',authenticate, require('../controllers/invoiceController').getClientWithInvoices);
 

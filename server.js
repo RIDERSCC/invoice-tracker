@@ -1,6 +1,7 @@
 const express = require('express');
 const { sequelize, Client, Invoice } = require('./models/index');
 const clientRoutes = require('./routes/clientRoutes');
+const errorHandler = require('./middleware/errorHandler');
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -35,3 +36,5 @@ app.use('/invoices', invoiceRoutes);
 
 const authRoutes = require('./routes/authRoutes');
 app.use('/auth', authRoutes);
+
+app.use(errorHandler); // must be the very last app.use()
