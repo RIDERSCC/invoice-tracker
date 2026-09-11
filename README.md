@@ -9,6 +9,7 @@ A RESTful backend API for managing clients and invoices, built with Node.js, Exp
 - JWT-based authentication (signup/login)
 - Password hashing with bcrypt
 - Role-based access control (`admin` vs `staff` permissions)
+- Request validation with Joi (rejects invalid data with clear error messages)
 - Environment-based configuration (`.env`) — no secrets in source code
 
 ## Tech Stack
@@ -106,7 +107,6 @@ Protected routes require an `Authorization: Bearer <token>` header, obtained fro
 
 ## Roadmap
 
-- [ ] Input validation layer
 - [ ] Centralized error-handling middleware
 - [ ] Pagination on list endpoints
 - [ ] Deployment (Render/Railway)
