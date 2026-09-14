@@ -32,7 +32,7 @@ invoice-tracker/
 ├── models/          # Sequelize models (Client, Invoice, User) + associations
 ├── controllers/      # Business logic for each resource
 ├── routes/          # Express route definitions
-├── middleware/       # Auth middleware (JWT verification, role checks
+├── middleware/       # Auth, validation, and centralized error-handling middleware
 ├── validators/       # Joi schemas for request validation
 ├── server.js         # Application entry point
 └── .env.example      # Template for required environment variables
@@ -115,6 +115,9 @@ All errors are returned as `{ "error": "message" }` with an appropriate HTTP sta
 
 ## Roadmap
 
+- [x] Input validation
+- [x] Centralized error-handling middleware
+- [x] Pagination on list endpoints
 - [ ] MongoDB-backed feature (Mongoose alongside MySQL)
 - [ ] Deployment (Render/Railway)
 - [ ] Optional: React frontend
