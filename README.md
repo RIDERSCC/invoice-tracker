@@ -10,6 +10,8 @@ A RESTful backend API for managing clients and invoices, built with Node.js, Exp
 - Password hashing with bcrypt
 - Role-based access control (`admin` vs `staff` permissions)
 - Request validation with Joi (rejects invalid data with clear error messages)
+- Centralized error handling (consistent error responses across the API)
+- Pagination on list endpoints (`?page=&limit=`)
 - Environment-based configuration (`.env`) — no secrets in source code
 
 ## Tech Stack
@@ -19,6 +21,8 @@ A RESTful backend API for managing clients and invoices, built with Node.js, Exp
 - **Database:** MySQL
 - **ORM:** Sequelize
 - **Auth:** JSON Web Tokens (jsonwebtoken), bcrypt for password hashing
+- **Validation:** Joi
+- **Dev tooling:** nodemon
 
 ## Project Structure
 
@@ -28,7 +32,8 @@ invoice-tracker/
 ├── models/          # Sequelize models (Client, Invoice, User) + associations
 ├── controllers/      # Business logic for each resource
 ├── routes/          # Express route definitions
-├── middleware/       # Auth middleware (JWT verification, role checks)
+├── middleware/       # Auth middleware (JWT verification, role checks
+├── validators/       # Joi schemas for request validation
 ├── server.js         # Application entry point
 └── .env.example      # Template for required environment variables
 ```
@@ -62,10 +67,10 @@ invoice-tracker/
    ```
 
 5. Start the server
-   ```bash
-   node server.js
-   ```
-   Tables are created automatically on first run via Sequelize's `sync()`.
+```bash
+   npm run dev
+```
+   Tables are created automatically on first run via Sequelize's `sync()`. `npm run dev` uses nodemon for auto-restart on file changes; use `node server.js` for a one-off run without auto-restart.
 
 The API will be running at `http://localhost:3000`.
 
@@ -80,7 +85,7 @@ The API will be running at `http://localhost:3000`.
 ### Clients
 | Method | Endpoint | Description | Auth Required |
 |---|---|---|---|
-| GET | `/clients` | List all clients | Yes |
+| GET | `/clients?page=&limit=` | List clients (paginated) | Yes |
 | POST | `/clients` | Create a client | Yes |
 | PUT | `/clients/:id` | Update a client | Yes |
 | DELETE | `/clients/:id` | Delete a client | Yes (admin only) |
@@ -89,25 +94,27 @@ The API will be running at `http://localhost:3000`.
 ### Invoices
 | Method | Endpoint | Description | Auth Required |
 |---|---|---|---|
-| GET | `/invoices` | List all invoices | Yes |
+| GET | `/invoices?page=&limit=` | List invoices (paginated) | Yes |
 | POST | `/invoices` | Create an invoice | Yes |
 | PUT | `/invoices/:id` | Update an invoice | Yes |
 | DELETE | `/invoices/:id` | Delete an invoice | Yes (admin only) |
 
 Protected routes require an `Authorization: Bearer <token>` header, obtained from `/auth/login`.
+All errors are returned as `{ "error": "message" }` with an appropriate HTTP status code (400, 401, 403, 404, 422, or 500), via centralized error-handling middleware.
 
 ## What This Project Demonstrates
 
-- REST API design with proper HTTP status codes (200/201/204/401/403/404)
+- REST API design with proper HTTP status codes (200/201/204/400/401/403/404/422)
 - Relational modeling and eager loading with Sequelize associations
 - Secure authentication: password hashing, JWT issuance/verification, stateless auth
 - Middleware-based authorization (route protection + role-based access)
+- Centralized, consistent error handling instead of repeated try/catch logic
+- Pagination for scalable list endpoints
 - Separation of concerns (routes / controllers / models / middleware)
 - Environment-based secret management
 
 ## Roadmap
 
-- [ ] Centralized error-handling middleware
-- [ ] Pagination on list endpoints
+- [ ] MongoDB-backed feature (Mongoose alongside MySQL)
 - [ ] Deployment (Render/Railway)
 - [ ] Optional: React frontend
